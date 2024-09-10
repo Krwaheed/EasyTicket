@@ -16,6 +16,26 @@ body {
     align-items: center; /* Center content horizontally */
 }
 
+/* Admin button */
+.admin-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1001; /* Ensure it’s above other content */
+}
+
+.admin-button:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+}
+
 /* Banner/Header */
 .banner {
     background-color: #000; /* Solid black background */
@@ -89,7 +109,7 @@ body {
     background-color: #2980b9;
 }
 
-/*sign up form*/
+/* Sign up form */
 .signup-container {
     display: flex;
     justify-content: center;
