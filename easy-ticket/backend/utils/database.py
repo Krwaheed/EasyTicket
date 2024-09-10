@@ -1,18 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()  # Initialize SQLAlchemy
+db = SQLAlchemy()
 
-# Function to initialize the database
 def init_db(app):
-    # Configure the database URI (replace 'username', 'password', and 'easyticket_db')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/easyticket_db'
-    
-    # Disable modification tracking to save resources
+    # Configure the database URI and disable tracking modifications
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://yourusername:yourpassword@localhost/easyticket_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    # Bind the app to SQLAlchemy
+    
+    # Bind the SQLAlchemy instance to the app
     db.init_app(app)
 
-    # Create all tables in the database (if not already created)
+    # Create tables if they don't already exist
     with app.app_context():
         db.create_all()
