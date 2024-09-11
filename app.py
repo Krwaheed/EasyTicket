@@ -10,7 +10,7 @@ db = mysql.connector.connect(
     host='localhost',
     user='root',  # Ensure this is your correct MySQL username
     password='',  # Ensure this is your correct MySQL password
-    database='easyticket1'  # Ensure this is your correct database name
+    database='easyticket'  # Ensure this is your correct database name
 )
 
 
@@ -59,7 +59,7 @@ def signup():
 @app.route('/logout')
 def logout():
     session.pop('username', None)  # Remove username from session
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 
 @app.route('/adminLogin', methods=['GET', 'POST'])
