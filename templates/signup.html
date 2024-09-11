@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyTicket - Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-box">
+            <form action="{{ url_for('signup') }}" method="POST" class="signup-form">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Select your interests:</label>
+                    <div class="interests-container">
+                        <button type="button" class="interest-option" data-value="music">Music</button>
+                        <button type="button" class="interest-option" data-value="sports">Sports</button>
+                        <button type="button" class="interest-option" data-value="theater">Theater</button>
+                        <button type="button" class="interest-option" data-value="comedy">Comedy</button>
+                        <button type="button" class="interest-option" data-value="another one">Drama</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <div class="signup-text">
+        Already have an account? <a href="index.html">Log in</a>
+    </div>
+    <script src="{{ url_for('static', filename='js/multi-select-handler.js') }}"></script>
+</body>
+</html>

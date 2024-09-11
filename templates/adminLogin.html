@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Update CSS link to use url_for -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-styles.css') }}">
+</head>
+<body>
+    <header class="admin-banner">
+        <h1>Admin Portal</h1>
+        <p>Welcome, Admin! Please log in to manage events and users.</p>
+    </header>
+
+    <section class="admin-login-section">
+        <div class="admin-login-box">
+            <h2>Admin Login</h2>
+            <!-- Update form action to submit to the Flask route -->
+            <form id="admin-login-form" action="{{ url_for('admin_login') }}" method="POST">
+                <div class="input-box">
+                    <label for="admin-username">Admin Username</label>
+                    <input type="text" name="admin-username" id="admin-username" required placeholder="Enter admin username">
+                </div>
+                <div class="input-box">
+                    <label for="admin-password">Password</label>
+                    <input type="password" name="admin-password" id="admin-password" required placeholder="Enter admin password">
+                </div>
+                <button type="submit" class="admin-btn">Login</button>
+            </form>
+            <p>Return to <a href="{{ url_for('home') }}">User Login</a></p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 EasyTicket Admin Portal. All rights reserved.</p>
+    </footer>
+
+    <!-- Update script link to use url_for -->
+    <script src="{{ url_for('static', filename='js/admin-login.js') }}"></script>
+</body>
+</html>
