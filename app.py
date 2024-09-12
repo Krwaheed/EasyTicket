@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
+from flask import render_template, Flask, request, session, redirect, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -26,13 +27,17 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # Authentication logic goes here
-        # This is just a placeholder for successful authentication
-        if True:  # Replace this condition with actual authentication check
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+
+        if user and check_password_hash(user['password'], password):
             session['username'] = username  # Store username in session
             return redirect(url_for('user_dashboard'))
         else:
-            return redirect(url_for('home'))
+            return redirect(url_for('home'))  # Redirect to home on failure
+    return render_template('login.html')
 
 
 @app.route('/user-dashboard')
@@ -47,14 +52,23 @@ def user_dashboard():
 def signup():
     if request.method == 'POST':
         # Handle the form submission
-        # Extract form data
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        # (Add database handling code here to store user details)
-        return redirect(url_for('home'))  # Redirect to home after signup
-    else:
-        return render_template('signup.html')
+
+        # Hash the password before storing it
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+
+        cursor = db.cursor()
+        try:
+            cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+                           (username, email, hashed_password))
+            db.commit()
+            return redirect(url_for('home'))  # Redirect to home after signup
+        except mysql.connector.Error as err:
+            return f"Error: {err}"
+    return render_template('signup.html')
+
 
 @app.route('/logout')
 def logout():
@@ -70,26 +84,24 @@ def admin_login():
         admin_username = request.form['admin-username']
         admin_password = request.form['admin-password']
 
-        # Here you should implement your authentication logic
-        # For example, check if the username and password are correct
-        # This is a placeholder for your database check:
-        # authenticated = check_credentials(admin_username, admin_password)
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM admins WHERE username = %s", (admin_username,))
+        admin = cursor.fetchone()
 
-        # If login is successful, redirect to the admin dashboard
-        # if authenticated:
-        #     return redirect(url_for('admin_dashboard'))
-        # else:
-        #     return "Login Failed"  # Or return to the login page with an error message
+        if admin and check_password_hash(admin['password'], admin_password):
+            session['admin_logged_in'] = True  # Set admin session
+            return redirect(url_for('admin_dashboard'))
+        else:
+            return "Login Failed"
 
-        # Temporarily redirecting for demonstration purposes
-        return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard'))
 
 
-# Placeholder route for the admin dashboard
 @app.route('/admin-dashboard')
 def admin_dashboard():
-    # This should display the admin dashboard
-    return render_template('admin-dashboard.html')
+    if 'admin_logged_in' in session:
+        return render_template('admin-dashboard.html')
+    return redirect(url_for('admin_login'))
 
 
 if __name__ == '__main__':
