@@ -18,16 +18,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(form);
         selectedInterests.forEach(interest => formData.append('interests', interest));
 
-        // Optionally log to console or inspect the FormData contents
-        console.log("Selected interests:", selectedInterests);
-
         // Submit form data via fetch API to the server
         fetch(form.action, {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
-        .then(data => console.log('Success:', data))
+        .then(data => {
+            if (data.status === 'success') {
+                // Redirect to the URL provided by the server
+                window.location.href = data.redirect_url;
+            } else {
+                console.error('Error:', data.message);
+            }
+        })
         .catch(error => console.error('Error:', error));
     });
 });

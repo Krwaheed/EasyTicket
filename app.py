@@ -1,21 +1,41 @@
+
 import os
 import mysql.connector
-from flask import render_template, Flask, request, session, redirect, url_for
+from flask import render_template, Flask, request, session, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-# Establish a connection to the MySQL database
+# Establishes connection to the database
 db = mysql.connector.connect(
     host='localhost',
-    user='root',  # Ensure this is your correct MySQL username
-    password='',  # Ensure this is your correct MySQL password
-    database='easyticket'  # Ensure this is your correct database name
+    user='root',
+    password='',
+    database='easyticket'
 )
 
 
-# Existing routes...
+def add_admin(username, password):
+    """Function to add an admin securely without a web interface."""
+    cursor = db.cursor(dictionary=True)
+    # Check if the username already exists
+    cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
+    if cursor.fetchone():
+        print("Error: Username already exists.")
+        return
+    # Hash the password
+    hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+    # Insert new admin
+    try:
+        cursor.execute("INSERT INTO admins (username, password) VALUES (%s, %s)", (username, hashed_password))
+        db.commit()
+        print("Admin added successfully.")
+    except mysql.connector.Error as error:
+        print(f"Error: {error}")
+    finally:
+        cursor.close()
+
 
 @app.route('/')
 def home():
@@ -27,11 +47,9 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
-
         if user and check_password_hash(user['password'], password):
             session['username'] = username  # Store username in session
             return redirect(url_for('user_dashboard'))
@@ -55,18 +73,16 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-
         # Hash the password before storing it
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-
         cursor = db.cursor()
         try:
             cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
                            (username, email, hashed_password))
             db.commit()
-            return redirect(url_for('home'))  # Redirect to home after signup
+            return jsonify({'status': 'success', 'redirect_url': url_for('home')})  # JSON response with redirect URL
         except mysql.connector.Error as err:
-            return f"Error: {err}"
+            return jsonify({'status': 'error', 'message': str(err)})
     return render_template('signup.html')
 
 
@@ -78,29 +94,26 @@ def logout():
 
 @app.route('/adminLogin', methods=['GET', 'POST'])
 def admin_login():
-    if request.method == 'GET':
-        return render_template('adminLogin.html')
-    elif request.method == 'POST':
-        admin_username = request.form['admin-username']
-        admin_password = request.form['admin-password']
-
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM admins WHERE username = %s", (admin_username,))
+        cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
         admin = cursor.fetchone()
-
-        if admin and check_password_hash(admin['password'], admin_password):
-            session['admin_logged_in'] = True  # Set admin session
+        if admin and check_password_hash(admin['password'], password):
+            session['admin-username'] = username  # Store admin username in session
             return redirect(url_for('admin_dashboard'))
         else:
-            return "Login Failed"
+            return redirect(url_for('admin_login'))  # Redirect to admin login on failure
 
-    return redirect(url_for('admin_dashboard'))
-
+    return render_template('adminLogin.html')
 
 @app.route('/admin-dashboard')
 def admin_dashboard():
-    if 'admin_logged_in' in session:
-        return render_template('admin-dashboard.html')
+    if 'admin-username' in session:
+        # Render the dashboard page with the admin username passed to the template
+        return render_template('admin-dashboard.html', admin_username=session['admin-username'])
+    # Redirect to login page if not logged in
     return redirect(url_for('admin_login'))
 
 
