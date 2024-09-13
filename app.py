@@ -55,7 +55,7 @@ def login():
             return redirect(url_for('user_dashboard'))
         else:
             return redirect(url_for('home'))  # Redirect to home on failure
-    return render_template('login.html')
+    return render_template('index.html')
 
 
 @app.route('/user-dashboard')
@@ -104,8 +104,7 @@ def admin_login():
             session['admin-username'] = username  # Store admin username in session
             return redirect(url_for('admin_dashboard'))
         else:
-            return redirect(url_for('admin_login'))  # Redirect to admin login on failure
-
+            return redirect(url_for('adminLogin'))
     return render_template('adminLogin.html')
 
 @app.route('/admin-dashboard')
@@ -113,8 +112,38 @@ def admin_dashboard():
     if 'admin-username' in session:
         # Render the dashboard page with the admin username passed to the template
         return render_template('admin-dashboard.html', admin_username=session['admin-username'])
-    # Redirect to login page if not logged in
-    return redirect(url_for('admin_login'))
+    else:
+        # Redirect to login page if not logged in
+        return redirect(url_for('adminLogin'))
+
+@app.route('/api/admin/session', methods=['GET'])
+def admin_session():
+    if 'admin-username' in session:
+        return jsonify({'username': session['admin-username']})
+    else:
+        return jsonify({'username': None}), 401
+
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    if 'admin-username' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, username, email FROM users")
+    users = cursor.fetchall()
+    return jsonify(users)
+
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    if 'admin-username' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name FROM events")  # Make sure you have an 'events' table with at least these fields
+    events = cursor.fetchall()
+    return jsonify([{'id': event['id'], 'name': event['name']} for event in events])
+
+
+
+
 
 
 if __name__ == '__main__':
