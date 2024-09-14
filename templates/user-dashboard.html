@@ -12,6 +12,31 @@
         <p>Welcome, {{ username }}!</p>
     </header>
     <main>
+        <h1>Search for Events</h1>
+        <form action="/user-dashboard" method="POST">
+            <input type="text" name="query" placeholder="Enter event search query" value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <h1>Upcoming Events</h1>
+        <ul>
+            {% for event in events %}
+            <li>
+                <h2>{{ event.name }}</h2>
+                <p>{{ event.description }}</p>
+                <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+                <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
+                <p><strong>Tickets:</strong></p>
+                <ul>
+                    {% for ticket in event.ticket_links %}
+                    <li><a href="{{ ticket.link }}">{{ ticket.source }}</a></li>
+                    {% endfor %}
+                </ul>
+                <p><img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" width="200"></p>
+            </li>
+            {% endfor %}
+        </ul>
+
         <p>This is your user dashboard where you can view your profile and settings.</p>
         <a href="{{ url_for('logout') }}">Logout</a>
     </main>
@@ -21,4 +46,6 @@
     <script src="{{ url_for('static', filename='js/user-dashboard.js') }}"></script>
 </body>
 </html>
+
+
 

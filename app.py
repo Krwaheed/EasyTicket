@@ -58,14 +58,53 @@ def login():
     return render_template('index.html')
 
 
-@app.route('/user-dashboard')
-def user_dashboard():
-    if 'username' in session:
-        return render_template('user-dashboard.html', username=session['username'])
+#*************API*************
+def fetch_real_time_events(query="Concerts in San-Francisco"):
+    import requests
+    url = "https://real-time-events-search.p.rapidapi.com/search-events"
+
+    querystring = {
+        "query": query,
+        "date": "any",
+        "is_virtual": "false",
+        "start": "0"
+    }
+
+    headers = {
+        "x-rapidapi-key": "466b2032ecmsh1ce2fa73d82434fp180e14jsnc743ba29a543",
+        "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=querystring)
+
+    if response.status_code == 200:
+        return response.json()  # Return the JSON response
     else:
+        return None
+
+
+
+@app.route('/user-dashboard', methods=['GET', 'POST'])
+def user_dashboard():
+    if 'username' not in session:
         return redirect(url_for('login'))
 
+    # Handle the event search query either from the form or use default
+    query = request.form.get('query') if request.method == 'POST' else "Concerts in San-Francisco"
 
+    # Fetch events based on the search query
+    events_data = fetch_real_time_events(query)
+
+    if events_data:
+        events = events_data.get('data', [])
+    else:
+        events = []  # Default to an empty list if fetch fails
+
+    # Render the dashboard template with events data
+    return render_template('user-dashboard.html', username=session['username'], events=events, query=query)
+
+
+#************ sing up for user*************
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -90,6 +129,8 @@ def signup():
 def logout():
     session.pop('username', None)  # Remove username from session
     return redirect(url_for('home'))
+
+#********************** Admin stuff ***********************
 
 
 @app.route('/adminLogin', methods=['GET', 'POST'])
