@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     interestButtons.forEach(button => {
         button.addEventListener('click', function () {
-            this.classList.toggle('selected');  // Toggle the 'selected' class on click
+            this.classList.toggle('selected');
         });
     });
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(form);
         selectedInterests.forEach(interest => formData.append('interests', interest));
 
-        // Submit form data via fetch API to the server
+
         fetch(form.action, {
             method: 'POST',
             body: formData
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // Redirect to the URL provided by the server
+
                 window.location.href = data.redirect_url;
             } else {
                 console.error('Error:', data.message);

@@ -19,14 +19,13 @@ db = mysql.connector.connect(
 def add_admin(username, password):
     """Function to add an admin securely without a web interface."""
     cursor = db.cursor(dictionary=True)
-    # Check if the username already exists
     cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
     if cursor.fetchone():
         print("Error: Username already exists.")
         return
-    # Hash the password
+
     hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-    # Insert new admin
+
     try:
         cursor.execute("INSERT INTO admins (username, password) VALUES (%s, %s)", (username, hashed_password))
         db.commit()
@@ -51,10 +50,10 @@ def login():
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
         if user and check_password_hash(user['password'], password):
-            session['username'] = username  # Store username in session
+            session['username'] = username
             return redirect(url_for('user_dashboard'))
         else:
-            return redirect(url_for('home'))  # Redirect to home on failure
+            return redirect(url_for('home'))
     return render_template('index.html')
 
 
@@ -78,7 +77,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     response = requests.get(url, headers=headers, params=querystring)
 
     if response.status_code == 200:
-        return response.json()  # Return the JSON response
+        return response.json()
     else:
         return None
 
@@ -89,7 +88,6 @@ def user_dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    # Handle the event search query either from the form or use default
     query = request.form.get('query') if request.method == 'POST' else "Concerts in San-Francisco"
 
     # Fetch events based on the search query
@@ -98,9 +96,8 @@ def user_dashboard():
     if events_data:
         events = events_data.get('data', [])
     else:
-        events = []  # Default to an empty list if fetch fails
+        events = []
 
-    # Render the dashboard template with events data
     return render_template('user-dashboard.html', username=session['username'], events=events, query=query)
 
 
@@ -127,7 +124,7 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)  # Remove username from session
+    session.pop('username', None)
     return redirect(url_for('home'))
 
 #********************** Admin stuff ***********************
@@ -142,7 +139,7 @@ def admin_login():
         cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
         admin = cursor.fetchone()
         if admin and check_password_hash(admin['password'], password):
-            session['admin-username'] = username  # Store admin username in session
+            session['admin-username'] = username
             return redirect(url_for('admin_dashboard'))
         else:
             return redirect(url_for('adminLogin'))
@@ -151,10 +148,10 @@ def admin_login():
 @app.route('/admin-dashboard')
 def admin_dashboard():
     if 'admin-username' in session:
-        # Render the dashboard page with the admin username passed to the template
+
         return render_template('admin-dashboard.html', admin_username=session['admin-username'])
     else:
-        # Redirect to login page if not logged in
+
         return redirect(url_for('adminLogin'))
 
 @app.route('/api/admin/session', methods=['GET'])
@@ -178,7 +175,7 @@ def get_events():
     if 'admin-username' not in session:
         return jsonify({'error': 'Unauthorized'}), 401
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT id, name FROM events")  # Make sure you have an 'events' table with at least these fields
+    cursor.execute("SELECT id, name FROM events")
     events = cursor.fetchall()
     return jsonify([{'id': event['id'], 'name': event['name']} for event in events])
 

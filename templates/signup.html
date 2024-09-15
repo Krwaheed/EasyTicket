@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyTicket - Sign Up</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
 </head>
+
 <body>
+    <a href="{{ url_for('login') }}" class="login-button">Already have an account? Login</a>
+
     <div class="signup-container">
         <div class="signup-box">
             <form action="{{ url_for('signup') }}" method="POST" class="signup-form">
@@ -30,16 +33,14 @@
                         <button type="button" class="interest-option" data-value="sports">Sports</button>
                         <button type="button" class="interest-option" data-value="theater">Theater</button>
                         <button type="button" class="interest-option" data-value="comedy">Comedy</button>
-                        <button type="button" class="interest-option" data-value="another one">Drama</button>
+                        <button type="button" class="interest-option" data-value="drama">Drama</button>
                     </div>
                 </div>
                 <button type="submit" class="btn">Sign Up</button>
             </form>
         </div>
     </div>
-    <div class="signup-text">
-    Already have an account? <a href="{{ url_for('home') }}">Login</a>
-</div>
+
     <script src="{{ url_for('static', filename='js/multi-select-handler.js') }}"></script>
 </body>
 </html>
