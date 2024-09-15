@@ -1,21 +1,192 @@
+/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
     line-height: 1.6;
-    padding: 20px;
 }
 
-header {
-    background-color: #f4f4f4;
+/* Header Styling */
+.header {
+    background-color: #0044cc;
+    color: white;
+    padding: 40px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between; /* Space between title and logout button */
+    align-items: center;
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+}
+
+.header-content p {
+    font-size: 1.2rem;
+}
+
+/* Logout Button Styling */
+.logout-button-container {
+    margin-right: 20px;
+}
+
+.logout-button {
+    background-color: #ff4d4f;
+    color: white;
     padding: 10px 20px;
-    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
-main {
-    margin-top: 20px;
-    text-align: center;
+.logout-button:hover {
+    background-color: #d9363e;
 }
 
-footer {
+/* Centered Search Section */
+.search-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 10px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 600px;
+}
+
+.search-input {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+}
+
+.search-button:hover {
+    background-color: #218838;
+}
+
+/* Recommended Section */
+.recommend-section {
     text-align: center;
-    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.recommend-section h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Events Section */
+.events-section {
+    margin-bottom: 40px;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Adjust for card width */
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.event-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;  /* Make all cards the same height */
+}
+
+.event-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.event-details {
+    flex-grow: 1;  /* Ensures that event details expand to fill available space */
+}
+
+.event-details h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.event-details p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.ticket-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ticket-list li {
+    margin-bottom: 10px;
+}
+
+.ticket-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.ticket-button:hover {
+    background-color: #0056b3;
+}
+
+.view-more {
+    color: #28a745;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.view-more:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #f4f4f4;
+    font-size: 0.9em;
 }

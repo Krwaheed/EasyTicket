@@ -7,45 +7,62 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user-dashboard.css') }}">
 </head>
 <body>
-    <header>
-        <h1>User Dashboard</h1>
-        <p>Welcome, {{ username }}!</p>
+    <header class="header">
+        <div class="header-content">
+            <h1>User Dashboard</h1>
+            <p>Welcome, {{ username }}!</p>
+        </div>
+        <!-- Logout Button -->
+        <div class="logout-button-container">
+            <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+        </div>
     </header>
-    <main>
-        <h1>Search for Events</h1>
-        <form action="/user-dashboard" method="POST">
-            <input type="text" name="query" placeholder="Enter event search query" value="{{ query }}">
-            <button type="submit">Search</button>
-        </form>
 
-        <h1>Upcoming Events</h1>
-        <ul>
-            {% for event in events %}
-            <li>
-                <h2>{{ event.name }}</h2>
-                <p>{{ event.description }}</p>
-                <p><strong>Start Time:</strong> {{ event.start_time }}</p>
-                <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
-                <p><strong>Tickets:</strong></p>
-                <ul>
-                    {% for ticket in event.ticket_links %}
-                    <li><a href="{{ ticket.link }}">{{ ticket.source }}</a></li>
-                    {% endfor %}
-                </ul>
-                <p><img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" width="200"></p>
-            </li>
-            {% endfor %}
-        </ul>
+    <main class="content">
+        <!-- Centered Search Section -->
+        <section class="search-section">
+            <form action="/user-dashboard" method="POST" class="search-form">
+                <input type="text" name="query" placeholder="Search for events, concerts, or venues..." value="{{ query }}" class="search-input">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </section>
 
-        <p>This is your user dashboard where you can view your profile and settings.</p>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <!-- Recommended Section -->
+        <section class="recommend-section">
+            <h2>Recommended for You</h2>
+            <p>No recommendations available at the moment.</p>
+        </section>
+
+        <!-- Events Section -->
+        <section class="events-section">
+            <h2>Upcoming Events</h2>
+            <div class="events-grid">
+                {% for event in events %}
+                <div class="event-card">
+                    <img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" class="event-thumbnail">
+                    <div class="event-details">
+                        <h3>{{ event.name }}</h3>
+                        <p>{{ event.description }}</p>
+                        <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+                        <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
+                        <p><strong>Tickets:</strong></p>
+                        <ul class="ticket-list">
+                            {% for ticket in event.ticket_links %}
+                            <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="view-more">View More</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
     </main>
-    <footer>
+
+    <footer class="footer">
         <p>&copy; 2024 EasyTicket. All rights reserved.</p>
     </footer>
+
     <script src="{{ url_for('static', filename='js/user-dashboard.js') }}"></script>
 </body>
 </html>
-
-
-
