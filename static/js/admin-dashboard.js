@@ -32,9 +32,9 @@ function loadUsers() {
                 row.innerHTML = `
                     <td>${user.username}</td>
                     <td>${user.email}</td>
-                    <td><button onclick="viewSavedEvents('${user.id}')">View Saved Events</button></td>
-                    <td><button onclick="viewPastPurchases('${user.id}')">View Past Purchases</button></td>
-                    <td><button class="delete-btn" onclick="deleteUser('${user.id}')">Delete Account</button></td>
+                    <td><button onclick="viewSavedEvents('${user.user_id}')">View Saved Events</button></td>
+                    <td><button onclick="viewPastPurchases('${user.user_id}')">View Past Purchases</button></td>
+                    <td><button class="delete-btn" onclick="deleteUser('${user.user_id}')">Delete Account</button></td>
                 `;
                 userList.appendChild(row);
             });
@@ -68,9 +68,9 @@ function deleteUser(userId) {
             .then(response => {
                 if (response.ok) {
                     alert('User deleted successfully.');
-                    loadUsers();
+                    loadUsers(); // Ensure this function is defined to reload the user list
                 } else {
-                    alert('Failed to delete user.');
+                    alert('Failed to delete user: ' + response.statusText);
                 }
             })
             .catch(error => console.error('Error deleting user:', error));

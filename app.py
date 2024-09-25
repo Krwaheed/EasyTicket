@@ -163,12 +163,63 @@ def admin_session():
 
 @app.route('/api/users', methods=['GET'])
 def get_users():
+    # Checking if admin is logged in
     if 'admin-username' not in session:
         return jsonify({'error': 'Unauthorized'}), 401
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT id, username, email FROM users")
-    users = cursor.fetchall()
+
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database='easyticket'
+    )
+
+    # Checking if the connection is lost and reconnect
+    if not connection.is_connected():
+        connection.reconnect(attempts=3, delay=2)
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT user_id, username, email FROM users")
+        users = cursor.fetchall()
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
     return jsonify(users)
+
+@app.route('/api/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    if 'admin-username' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    connection = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database='easyticket'
+    )
+
+    if not connection.is_connected():
+        connection.reconnect(attempts=3, delay=2)
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
+        connection.commit()  # Commit the deletion
+        if cursor.rowcount == 0:  # No rows were affected (user not found)
+            return jsonify({'error': 'User not found'}), 404
+    except mysql.connector.Error as err:
+        return jsonify({'error': str(err)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({'message': 'User deleted successfully'}), 200
+
+
 
 @app.route('/api/events', methods=['GET'])
 def get_events():
