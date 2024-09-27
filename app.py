@@ -109,18 +109,32 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+
         # Hash the password before storing it
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
-        cursor = db.cursor()
+
+        cursor = db.cursor()  # Use the established connection
         try:
+            # Insert user into the users table
             cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
                            (username, email, hashed_password))
-            db.commit()
+            user_id = cursor.lastrowid  # Get the ID of the newly created user
+
+            # Save selected interests
+            selected_interests = request.form.getlist('interests')
+            for interest in selected_interests:
+                cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
+                               (user_id, interest))
+
+            db.commit()  # Commit changes to the database
             return jsonify({'status': 'success', 'redirect_url': url_for('home')})  # JSON response with redirect URL
         except mysql.connector.Error as err:
+            db.rollback()  # Rollback in case of error
             return jsonify({'status': 'error', 'message': str(err)})
-    return render_template('signup.html')
+        finally:
+            cursor.close()  # Close the cursor
 
+    return render_template('signup.html')
 
 @app.route('/logout')
 def logout():

@@ -115,6 +115,35 @@ body {
     border-color: #3498db;
 }
 
+/* Subcategories container styling */
+.subcategory-container {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Subcategory buttons */
+.subcategory-option {
+    background-color: #f0f0f0;
+    border: 2px solid transparent;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    font-size: 0.9em;
+    width: 28%;
+}
+
+.subcategory-option:hover,
+.subcategory-option.selected {
+    background-color: #2980b9;
+    color: #fff;
+    border-color: #2980b9;
+}
+
 /* Button styles */
 .btn {
     width: 100%;

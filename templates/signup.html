@@ -26,16 +26,68 @@
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+
                 <div class="form-group">
                     <label>Select your interests:</label>
-                    <div class="interests-container">
-                        <button type="button" class="interest-option" data-value="music">Music</button>
-                        <button type="button" class="interest-option" data-value="sports">Sports</button>
-                        <button type="button" class="interest-option" data-value="theater">Theater</button>
-                        <button type="button" class="interest-option" data-value="comedy">Comedy</button>
-                        <button type="button" class="interest-option" data-value="drama">Drama</button>
+                    <div class="category-selection">
+                        <button type="button" class="interest-option" data-value="1">Movies</button>
+                        <button type="button" class="interest-option" data-value="10">Music</button>
+                        <button type="button" class="interest-option" data-value="19">Sports</button>
+                        <button type="button" class="interest-option" data-value="28">Theater</button>
+                        <button type="button" class="interest-option" data-value="3">Comedy</button>
+                        <button type="button" class="interest-option" data-value="63">Drama</button>
                     </div>
                 </div>
+
+                <!-- Subcategories for Movies -->
+                <div class="subcategory-selection" id="subcategory-movies" style="display:none;">
+                    <label>Select Movie Genres:</label>
+                    <button type="button" class="subcategory-option" data-value="2">Action</button>
+                    <button type="button" class="subcategory-option" data-value="3">Comedy</button>
+                    <button type="button" class="subcategory-option" data-value="4">Romance</button>
+                    <button type="button" class="subcategory-option" data-value="5">Horror</button>
+                    <button type="button" class="subcategory-option" data-value="6">Thriller</button>
+                    <button type="button" class="subcategory-option" data-value="7">Sci-Fi</button>
+                    <button type="button" class="subcategory-option" data-value="8">Documentary</button>
+                    <button type="button" class="subcategory-option" data-value="9">Animated</button>
+                </div>
+
+                <!-- Subcategories for Music -->
+                <div class="subcategory-selection" id="subcategory-music" style="display:none;">
+                    <label>Select Music Genres:</label>
+                    <button type="button" class="subcategory-option" data-value="11">Pop</button>
+                    <button type="button" class="subcategory-option" data-value="12">Rock</button>
+                    <button type="button" class="subcategory-option" data-value="13">Jazz</button>
+                    <button type="button" class="subcategory-option" data-value="14">Classical</button>
+                    <button type="button" class="subcategory-option" data-value="15">Hip-Hop</button>
+                    <button type="button" class="subcategory-option" data-value="16">Country</button>
+                    <button type="button" class="subcategory-option" data-value="17">Electronic</button>
+                    <button type="button" class="subcategory-option" data-value="18">Reggae</button>
+                </div>
+
+                <!-- Subcategories for Sports -->
+                <div class="subcategory-selection" id="subcategory-sports" style="display:none;">
+                    <label>Select Sports:</label>
+                    <button type="button" class="subcategory-option" data-value="20">Football</button>
+                    <button type="button" class="subcategory-option" data-value="21">Basketball</button>
+                    <button type="button" class="subcategory-option" data-value="22">Tennis</button>
+                    <button type="button" class="subcategory-option" data-value="23">Soccer</button>
+                    <button type="button" class="subcategory-option" data-value="24">Cricket</button>
+                    <button type="button" class="subcategory-option" data-value="25">Hockey</button>
+                    <button type="button" class="subcategory-option" data-value="26">Swimming</button>
+                    <button type="button" class="subcategory-option" data-value="27">Racing</button>
+                </div>
+
+                <!-- Subcategories for Theater -->
+                <div class="subcategory-selection" id="subcategory-theater" style="display:none;">
+                    <label>Select Theater Types:</label>
+                    <button type="button" class="subcategory-option" data-value="29">Musical</button>
+                    <button type="button" class="subcategory-option" data-value="30">Opera</button>
+                    <button type="button" class="subcategory-option" data-value="31">Ballet</button>
+                    <button type="button" class="subcategory-option" data-value="32">Play</button>
+                    <button type="button" class="subcategory-option" data-value="33">Stand-Up Comedy</button>
+                </div>
+
                 <button type="submit" class="btn">Sign Up</button>
             </form>
         </div>
