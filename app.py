@@ -1,5 +1,6 @@
 
 import os
+from flask import flash
 import mysql.connector
 from flask import render_template, Flask, request, session, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -47,14 +48,17 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        cursor.execute("SELECT user_id, password FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
         if user and check_password_hash(user['password'], password):
             session['username'] = username
+            session['user_id'] = user['user_id']  # Set user_id in session
             return redirect(url_for('user_dashboard'))
         else:
             return redirect(url_for('home'))
     return render_template('index.html')
+
+
 
 
 #*************API*************
@@ -70,7 +74,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-        "x-rapidapi-key": "466b2032ecmsh1ce2fa73d82434fp180e14jsnc743ba29a543",
+        "x-rapidapi-key": "841bdb0064msh17e5dfad931db18p19ab00jsnc5778155a4f5",
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -89,16 +93,24 @@ def user_dashboard():
         return redirect(url_for('login'))
 
     query = request.form.get('query') if request.method == 'POST' else "Concerts in San-Francisco"
-
     # Fetch events based on the search query
     events_data = fetch_real_time_events(query)
-
     if events_data:
         events = events_data.get('data', [])
     else:
         events = []
 
-    return render_template('user-dashboard.html', username=session['username'], events=events, query=query)
+    # Fetch saved events from database
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT event_id, event_name, event_date, location 
+        FROM saved_events 
+        WHERE user_id = %s
+    """, (session.get('user_id'),))
+    saved_events = cursor.fetchall()
+    cursor.close()
+
+    return render_template('user-dashboard.html', username=session['username'], events=events, saved_events=saved_events, query=query)
 
 
 #************ sing up for user*************
@@ -245,6 +257,39 @@ def get_events():
     return jsonify([{'id': event['id'], 'name': event['name']} for event in events])
 
 
+#*********saved events**********
+@app.route('/save-event', methods=['POST'])
+def save_event():
+    print("Received form data:", request.form)
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    event_id = request.form.get('event_id')
+    event_name = request.form.get('event_name')
+    event_date = request.form.get('event_date')
+    location = request.form.get('location')
+
+    print("Event Name:", event_name)  # Check if event_name is None
+
+    try:
+        cursor = db.cursor()
+        query = """
+            INSERT INTO saved_events (user_id, event_id, event_name, event_date, location) 
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (session['user_id'], event_id, event_name, event_date, location))
+        db.commit()
+        flash('Event saved successfully!')
+    except mysql.connector.Error as err:
+        print('Database Error:', err)
+        flash('Error saving event.')
+    finally:
+        cursor.close()
+    return redirect(url_for('user_dashboard'))
+
+
+
+#*****remove events*******
 
 
 

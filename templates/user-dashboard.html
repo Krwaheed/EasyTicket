@@ -33,6 +33,27 @@
             <p>No recommendations available at the moment.</p>
         </section>
 
+<!-- Saved Events Section -->
+<section class="saved-events-section">
+    <h2>Saved Events</h2>
+    <div class="events-grid">
+        {% if saved_events %}
+            {% for event in saved_events %}
+            <div class="event-card">
+                <h3>{{ event.event_name }}</h3>
+                <p><strong>Date:</strong> {{ event.event_date }}</p>
+                <p><strong>Location:</strong> {{ event.location }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>You have not saved any events yet.</p>
+        {% endif %}
+    </div>
+</section>
+
+
+
+
         <!-- Events Section -->
         <section class="events-section">
             <h2>Upcoming Events</h2>
@@ -51,6 +72,14 @@
                             <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
                             {% endfor %}
                         </ul>
+                        <!-- Save Event Form -->
+                        <form action="{{ url_for('save_event') }}" method="post">
+                            <input type="hidden" name="event_id" value="{{ event.id }}">
+                            <input type="hidden" name="event_name" value="{{ event.name }}">
+                            <input type="hidden" name="event_date" value="{{ event.date }}">
+                            <input type="hidden" name="location" value="{{ event.location }}">
+                            <button type="submit">Save Event</button>
+                        </form>
                         <a href="#" class="view-more">View More</a>
                     </div>
                 </div>
