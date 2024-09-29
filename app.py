@@ -86,12 +86,38 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
         return None
 
 
+def get_user_recommendations(username):
+    """Fetch recommended events based on user interests."""
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT i.interest_name FROM user_interests ui
+        JOIN interests i ON ui.interest_id = i.interest_id
+        JOIN users u ON ui.user_id = u.user_id
+        WHERE u.username = %s
+    """, (username,))
+    interests = cursor.fetchall()
+    print("Interests fetched:", interests)  # Debugging line
+
+    recommended_events = []
+    for interest in interests:
+        print("Fetching events for interest:", interest['interest_name'])  # Debugging line
+        event = fetch_real_time_events(interest['interest_name'])
+        print("Event fetched:", event)  # Debugging line
+        if event and event.get('data'):
+            # Add only the first event of each interest to the recommendations
+            recommended_events.append(event['data'][0])
+
+    print("Recommended events:", recommended_events)  # Debugging line
+    return recommended_events
+
+
 
 @app.route('/user-dashboard', methods=['GET', 'POST'])
 def user_dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
 
+    username = session['username']
     query = request.form.get('query') if request.method == 'POST' else "Concerts in San-Francisco"
     # Fetch events based on the search query
     events_data = fetch_real_time_events(query)
@@ -99,6 +125,9 @@ def user_dashboard():
         events = events_data.get('data', [])
     else:
         events = []
+
+    # Fetch user-specific recommendations
+    recommendations = get_user_recommendations(username)
 
     # Fetch saved events from database
     cursor = db.cursor(dictionary=True)
@@ -110,7 +139,7 @@ def user_dashboard():
     saved_events = cursor.fetchall()
     cursor.close()
 
-    return render_template('user-dashboard.html', username=session['username'], events=events, saved_events=saved_events, query=query)
+    return render_template('user-dashboard.html', username=session['username'], events=events, saved_events=saved_events,recommendations=recommendations, query=query)
 
 
 #************ sing up for user*************
@@ -289,26 +318,9 @@ def save_event():
 
 
 
-#*****Remove events*******
-@app.route('/remove-event', methods=['POST'])
-def remove_event():
-    if 'user_id' not in session:
-        flash('Please login to continue.')
-        return redirect(url_for('login'))
+#*****remove events*******
 
-    event_id = request.form.get('event_id')
-    try:
-        cursor = db.cursor()
-        cursor.execute("DELETE FROM saved_events WHERE event_id = %s AND user_id = %s", (event_id, session['user_id']))
-        db.commit()
-        flash('Event removed successfully!')
-    except mysql.connector.Error as err:
-        db.rollback()
-        flash(f'Error removing event: {err}')
-    finally:
-        cursor.close()
 
-    return redirect(url_for('user_dashboard'))
 
 
 if __name__ == '__main__':
