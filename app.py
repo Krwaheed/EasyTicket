@@ -74,7 +74,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-        "x-rapidapi-key": "841bdb0064msh17e5dfad931db18p19ab00jsnc5778155a4f5",
+        "x-rapidapi-key": "e005e7d7acmsh96c1e4bbda89a34p1968c3jsn65a0ee93fa43",
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -289,9 +289,26 @@ def save_event():
 
 
 
-#*****remove events*******
+#*****Remove events*******
+@app.route('/remove-event', methods=['POST'])
+def remove_event():
+    if 'user_id' not in session:
+        flash('Please login to continue.')
+        return redirect(url_for('login'))
 
+    event_id = request.form.get('event_id')
+    try:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM saved_events WHERE event_id = %s AND user_id = %s", (event_id, session['user_id']))
+        db.commit()
+        flash('Event removed successfully!')
+    except mysql.connector.Error as err:
+        db.rollback()
+        flash(f'Error removing event: {err}')
+    finally:
+        cursor.close()
 
+    return redirect(url_for('user_dashboard'))
 
 
 if __name__ == '__main__':

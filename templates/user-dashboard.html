@@ -33,59 +33,69 @@
             <p>No recommendations available at the moment.</p>
         </section>
 
-<!-- Saved Events Section -->
-<section class="saved-events-section">
-    <h2>Saved Events</h2>
-    <div class="events-grid">
-        {% if saved_events %}
-            {% for event in saved_events %}
-            <div class="event-card">
-                <h3>{{ event.event_name }}</h3>
-                <p><strong>Date:</strong> {{ event.event_date }}</p>
-                <p><strong>Location:</strong> {{ event.location }}</p>
+  <!-- Saved Events Section -->
+        <section class="saved-events-section">
+            <h2>Saved Events</h2>
+            <div class="events-grid">
+                {% if saved_events %}
+                    {% for event in saved_events %}
+                        <div class="event-card">
+    <h3>{{ event.event_name }}</h3>
+    <p><strong>Date:</strong> {{ event.event_date }}</p>
+    <p><strong>Location:</strong> {{ event.location }}</p>
+    <!-- Remove Event Form -->
+    <form action="{{ url_for('remove_event') }}" method="post">
+        <input type="hidden" name="event_id" value="{{ event.event_id }}">
+        <button type="submit">Remove Event</button>
+    </form>
+                            <a href="https://external-event-page.com/events/{{ event.event_id }}" target="_blank" class="share-event-link">Share This Event</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>You have not saved any events yet.</p>
+                {% endif %}
             </div>
-            {% endfor %}
-        {% else %}
-            <p>You have not saved any events yet.</p>
-        {% endif %}
+        </section>
+
+
+
+
+
+    <!-- Events Section -->
+<section class="events-section">
+    <h2>Upcoming Events</h2>
+    <div class="events-grid">
+        {% for event in events %}
+        <div class="event-card">
+            <img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" class="event-thumbnail">
+            <div class="event-details">
+                <h3>{{ event.name }}</h3>
+                <p>{{ event.description }}</p>
+                <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+                <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
+                <p><strong>Tickets:</strong></p>
+                <ul class="ticket-list">
+                    {% for ticket in event.ticket_links %}
+                    <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
+                    {% endfor %}
+                </ul>
+                <!-- Save Event Form -->
+                <form action="{{ url_for('save_event') }}" method="post">
+                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                    <input type="hidden" name="event_name" value="{{ event.name }}">
+                    <input type="hidden" name="event_date" value="{{ event.date }}">
+                    <input type="hidden" name="location" value="{{ event.location }}">
+                    <button type="submit">Save Event</button>
+                </form>
+                <!-- Share Event Link -->
+                <a href="https://external-event-page.com/events/{{ event.id }}" target="_blank" class="share-event-link">Share This Event</a>
+                <a href="#" class="view-more">View More</a>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </section>
 
-
-
-
-        <!-- Events Section -->
-        <section class="events-section">
-            <h2>Upcoming Events</h2>
-            <div class="events-grid">
-                {% for event in events %}
-                <div class="event-card">
-                    <img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" class="event-thumbnail">
-                    <div class="event-details">
-                        <h3>{{ event.name }}</h3>
-                        <p>{{ event.description }}</p>
-                        <p><strong>Start Time:</strong> {{ event.start_time }}</p>
-                        <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
-                        <p><strong>Tickets:</strong></p>
-                        <ul class="ticket-list">
-                            {% for ticket in event.ticket_links %}
-                            <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
-                            {% endfor %}
-                        </ul>
-                        <!-- Save Event Form -->
-                        <form action="{{ url_for('save_event') }}" method="post">
-                            <input type="hidden" name="event_id" value="{{ event.id }}">
-                            <input type="hidden" name="event_name" value="{{ event.name }}">
-                            <input type="hidden" name="event_date" value="{{ event.date }}">
-                            <input type="hidden" name="location" value="{{ event.location }}">
-                            <button type="submit">Save Event</button>
-                        </form>
-                        <a href="#" class="view-more">View More</a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
     </main>
 
     <footer class="footer">
