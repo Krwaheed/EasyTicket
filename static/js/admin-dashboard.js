@@ -33,7 +33,6 @@ function loadUsers() {
                     <td>${user.username}</td>
                     <td>${user.email}</td>
                     <td><button onclick="viewSavedEvents('${user.user_id}')">View Saved Events</button></td>
-                    <td><button onclick="viewPastPurchases('${user.user_id}')">View Past Purchases</button></td>
                     <td><button class="delete-btn" onclick="deleteUser('${user.user_id}')">Delete Account</button></td>
                 `;
                 userList.appendChild(row);
@@ -77,20 +76,33 @@ function deleteUser(userId) {
     }
 }
 
-// Commented out functions related to features not yet implemented in the backend
-/*
 function viewSavedEvents(userId) {
-    // Placeholder for future implementation
-}
+    fetch(`/admin/view-saved-events/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const savedEventsList = document.getElementById('saved-events-list');
+            savedEventsList.innerHTML = ''; // Clear the previous content
 
-function viewPastPurchases(userId) {
-    // Placeholder for future implementation
-}
+            if (data.events.length > 0) {
+                data.events.forEach(event => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <h4>${event.event_name}</h4>
+                        <p>Date: ${event.event_date}</p>
+                        <p>Location: ${event.location}</p>
+                    `;
+                    savedEventsList.appendChild(listItem);
+                });
+            } else {
+                savedEventsList.innerHTML = '<li>No saved events for this user.</li>';
+            }
 
-function blockEvent(eventId) {
-    // Placeholder for future implementation
+            // Show the modal
+            const savedEventsModal = document.getElementById('saved-events-modal');
+            savedEventsModal.style.display = 'block';
+        })
+        .catch(error => console.error('Error fetching saved events:', error));
 }
-*/
 
 // Function to handle modals (open/close)
 function setupModals() {

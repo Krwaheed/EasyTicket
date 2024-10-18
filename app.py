@@ -74,7 +74,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-        "x-rapidapi-key": "e005e7d7acmsh96c1e4bbda89a34p1968c3jsn65a0ee93fa43",
+        "x-rapidapi-key": "e1771a4d3cmshe1422348b33577ap137634jsnf514f28dfad6",
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -146,7 +146,6 @@ def user_dashboard():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Handle the form submission
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -315,6 +314,20 @@ def save_event():
     finally:
         cursor.close()
     return redirect(url_for('user_dashboard'))
+
+@app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
+def view_saved_events(user_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT event_name, event_date, location FROM saved_events WHERE user_id = %s"
+        cursor.execute(query, (user_id,))
+        events = cursor.fetchall()
+        return jsonify({'status': 'success', 'events': events})
+    except mysql.connector.Error as err:
+        print(f"Database Error: {err}")
+        return jsonify({'status': 'error', 'message': str(err)})
+    finally:
+        cursor.close()
 
 
 
