@@ -30,7 +30,7 @@
 
     <section class="recommend-section">
         <h2>Recommended for You</h2>
-        <div class="events-grid"> <!-- New: Using grid layout similar to "Events Section" -->
+        <div class="events-grid">
             {% if recommendations %}
             {% for event in recommendations %}
             <div class="event-detail">
@@ -124,7 +124,7 @@
 
 
 
-                <a href="{{ event.link }}" target="_blank" class="view-more">View More</a> <!-- Added event link -->
+                <a href="{{ event.link }}" target="_blank" class="view-more">View More</a>
             </div>
         </div>
         {% endfor %}

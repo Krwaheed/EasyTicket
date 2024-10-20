@@ -331,9 +331,7 @@ def save_event():
 
     print("Event Name:", event_name)
 
-
     try:
-
         formatted_event_date = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
     except ValueError:
         flash('Invalid event date format.')
@@ -346,7 +344,6 @@ def save_event():
             INSERT INTO saved_events (user_id, event_id, event_name, event_date, location) 
             VALUES (%s, %s, %s, %s, %s)
         """
-        # Combine venue name and full address for location
         location = f"{venue_name}, {full_address}"
 
         cursor.execute(query, (session['user_id'], event_id, event_name, formatted_event_date, location))
@@ -357,6 +354,10 @@ def save_event():
         flash('Error saving event. Please try again later.')
     finally:
         cursor.close()
+
+    # Ensure the function returns a valid response
+    return redirect(url_for('user_dashboard'))
+
 
 
 @app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
