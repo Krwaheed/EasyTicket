@@ -1,5 +1,7 @@
 
 import os
+import random
+
 from flask import flash
 from datetime import datetime
 import mysql.connector
@@ -75,7 +77,9 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
+
         "x-rapidapi-key": "302ec63930msh5311bb73e188dc3p112effjsnb788b6f9f595",
+
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -88,7 +92,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
 
 
 def get_user_recommendations(username):
-    """Fetch recommended events based on user interests."""
+    """Fetch recommended events based on user interests, excluding general categories."""
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT i.interest_name FROM user_interests ui
@@ -99,14 +103,28 @@ def get_user_recommendations(username):
     interests = cursor.fetchall()
     print("Interests fetched:", interests)
 
+    # List of general categories to exclude
+    exclude_categories = ['Movies', 'Theater', 'Music', 'Sports']
+
+    # Filter out general categories
+    filtered_interests = [interest for interest in interests if interest['interest_name'] not in exclude_categories]
+    print("Filtered interests:", filtered_interests)  # Debugging line
+
+    # Shuffle the list of filtered interests and pick the first three
+    random.shuffle(filtered_interests)
+    selected_interests = filtered_interests[:3] if len(filtered_interests) > 3 else filtered_interests
+
     recommended_events = []
-    for interest in interests:
-        print("Fetching events for interest:", interest['interest_name'])
-        event = fetch_real_time_events(interest['interest_name'])
-        print("Event fetched:", event)
-        if event and event.get('data'):
-            # Add only the first event of each interest to the recommendations
-            recommended_events.append(event['data'][0])
+
+    for interest in selected_interests:
+        print("Fetching events for interest:", interest['interest_name'])  # Debugging line
+        events = fetch_real_time_events(interest['interest_name'])
+        print("Events fetched:", events)  # Debugging line
+        if events and events.get('data'):
+            # Choose a random event from those fetched
+            random_event = random.choice(events['data'])
+            recommended_events.append(random_event)
+
 
     print("Recommended events:", recommended_events)
     return recommended_events
@@ -147,7 +165,6 @@ def user_dashboard():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Handle the form submission
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
@@ -167,6 +184,10 @@ def signup():
             for interest in selected_interests:
                 cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
                                (user_id, interest))
+            selected_subcategories = request.form.getlist('subcategories')
+            for subcategory in selected_subcategories:
+                cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
+                               (user_id, subcategory))
 
             db.commit()  # Commit changes to the database
             return jsonify({'status': 'success', 'redirect_url': url_for('home')})  # JSON response with redirect URL
@@ -337,7 +358,22 @@ def save_event():
     finally:
         cursor.close()
 
-    return redirect(url_for('user_dashboard'))
+
+@app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
+def view_saved_events(user_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT event_name, event_date, location FROM saved_events WHERE user_id = %s"
+        cursor.execute(query, (user_id,))
+        events = cursor.fetchall()
+        return jsonify({'status': 'success', 'events': events})
+    except mysql.connector.Error as err:
+        print(f"Database Error: {err}")
+        return jsonify({'status': 'error', 'message': str(err)})
+    finally:
+        cursor.close()
+
+
 
 
 #*****remove events*******
