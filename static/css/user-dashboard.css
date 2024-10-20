@@ -96,13 +96,60 @@ body {
 
 /* Recommended Section */
 .recommend-section {
-    text-align: center;
-    margin-bottom: 40px;
+    text-align: center; /* Center align the header text */
+    margin-bottom: 40px; /* Space at the bottom of the section */
 }
 
-.recommend-section h2 {
-    color: #333;
-    margin-bottom: 20px;
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Sets up three columns */
+    gap: 20px; /* Space between each event detail box */
+    padding: 0 20px; /* Padding on the sides of the grid container */
+}
+
+.event-detail {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Make all detail cards the same height for uniformity */
+}
+
+.event-detail h3, .event-detail p {
+    margin-bottom: 10px;
+}
+
+.ticket-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ticket-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.ticket-button:hover {
+    background-color: #0056b3;
+}
+
+.view-more {
+    color: #28a745;
+    text-decoration:none;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.view-more:hover {
+    text-decoration: underline;
 }
 
 /* Events Section */

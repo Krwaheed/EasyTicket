@@ -1,5 +1,7 @@
 
 import os
+import random
+
 from flask import flash
 import mysql.connector
 from flask import render_template, Flask, request, session, redirect, url_for, jsonify
@@ -74,7 +76,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-        "x-rapidapi-key": "e1771a4d3cmshe1422348b33577ap137634jsnf514f28dfad6",
+        "x-rapidapi-key": "a3804edb29msh3d684e1f89bacb1p1e8605jsn41cfb1cbdb6c",
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -87,7 +89,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
 
 
 def get_user_recommendations(username):
-    """Fetch recommended events based on user interests."""
+    """Fetch recommended events based on user interests, excluding general categories."""
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT i.interest_name FROM user_interests ui
@@ -98,14 +100,26 @@ def get_user_recommendations(username):
     interests = cursor.fetchall()
     print("Interests fetched:", interests)  # Debugging line
 
+    # List of general categories to exclude
+    exclude_categories = ['Movies', 'Theater', 'Music', 'Sports']
+
+    # Filter out general categories
+    filtered_interests = [interest for interest in interests if interest['interest_name'] not in exclude_categories]
+    print("Filtered interests:", filtered_interests)  # Debugging line
+
+    # Shuffle the list of filtered interests and pick the first three
+    random.shuffle(filtered_interests)
+    selected_interests = filtered_interests[:3] if len(filtered_interests) > 3 else filtered_interests
+
     recommended_events = []
-    for interest in interests:
+    for interest in selected_interests:
         print("Fetching events for interest:", interest['interest_name'])  # Debugging line
-        event = fetch_real_time_events(interest['interest_name'])
-        print("Event fetched:", event)  # Debugging line
-        if event and event.get('data'):
-            # Add only the first event of each interest to the recommendations
-            recommended_events.append(event['data'][0])
+        events = fetch_real_time_events(interest['interest_name'])
+        print("Events fetched:", events)  # Debugging line
+        if events and events.get('data'):
+            # Choose a random event from those fetched
+            random_event = random.choice(events['data'])
+            recommended_events.append(random_event)
 
     print("Recommended events:", recommended_events)  # Debugging line
     return recommended_events
