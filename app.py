@@ -3,6 +3,7 @@ import os
 import random
 
 from flask import flash
+from datetime import datetime
 import mysql.connector
 from flask import render_template, Flask, request, session, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -76,7 +77,9 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-        "x-rapidapi-key": "a3804edb29msh3d684e1f89bacb1p1e8605jsn41cfb1cbdb6c",
+
+        "x-rapidapi-key": "302ec63930msh5311bb73e188dc3p112effjsnb788b6f9f595",
+
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
@@ -98,7 +101,7 @@ def get_user_recommendations(username):
         WHERE u.username = %s
     """, (username,))
     interests = cursor.fetchall()
-    print("Interests fetched:", interests)  # Debugging line
+    print("Interests fetched:", interests)
 
     # List of general categories to exclude
     exclude_categories = ['Movies', 'Theater', 'Music', 'Sports']
@@ -112,6 +115,7 @@ def get_user_recommendations(username):
     selected_interests = filtered_interests[:3] if len(filtered_interests) > 3 else filtered_interests
 
     recommended_events = []
+
     for interest in selected_interests:
         print("Fetching events for interest:", interest['interest_name'])  # Debugging line
         events = fetch_real_time_events(interest['interest_name'])
@@ -121,7 +125,8 @@ def get_user_recommendations(username):
             random_event = random.choice(events['data'])
             recommended_events.append(random_event)
 
-    print("Recommended events:", recommended_events)  # Debugging line
+
+    print("Recommended events:", recommended_events)
     return recommended_events
 
 
@@ -307,31 +312,52 @@ def get_events():
 @app.route('/save-event', methods=['POST'])
 def save_event():
     print("Received form data:", request.form)
+
+    # Check if user is logged in
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
+    # Extract event details from form data
     event_id = request.form.get('event_id')
     event_name = request.form.get('event_name')
-    event_date = request.form.get('event_date')
-    location = request.form.get('location')
+    start_time = request.form.get('start_time')
+    venue_name = request.form.get('venue_name')
+    full_address = request.form.get('full_address')
 
-    print("Event Name:", event_name)  # Check if event_name is None
+    # Check if required fields are provided
+    if not event_id or not event_name or not start_time or not venue_name or not full_address:
+        flash('Missing event data. Please provide all event details.')
+        return redirect(url_for('user_dashboard'))
+
+    print("Event Name:", event_name)
+
+
+    try:
+
+        formatted_event_date = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        flash('Invalid event date format.')
+        return redirect(url_for('user_dashboard'))
 
     try:
         cursor = db.cursor()
+
         query = """
             INSERT INTO saved_events (user_id, event_id, event_name, event_date, location) 
             VALUES (%s, %s, %s, %s, %s)
         """
-        cursor.execute(query, (session['user_id'], event_id, event_name, event_date, location))
+        # Combine venue name and full address for location
+        location = f"{venue_name}, {full_address}"
+
+        cursor.execute(query, (session['user_id'], event_id, event_name, formatted_event_date, location))
         db.commit()
         flash('Event saved successfully!')
     except mysql.connector.Error as err:
         print('Database Error:', err)
-        flash('Error saving event.')
+        flash('Error saving event. Please try again later.')
     finally:
         cursor.close()
-    return redirect(url_for('user_dashboard'))
+
 
 @app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
 def view_saved_events(user_id):
@@ -349,7 +375,27 @@ def view_saved_events(user_id):
 
 
 
+
 #*****remove events*******
+@app.route('/remove-event', methods=['POST'])
+def remove_event():
+    if 'user_id' not in session:
+        flash('Please login to continue.')
+        return redirect(url_for('login'))
+
+    event_id = request.form.get('event_id')
+    try:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM saved_events WHERE event_id = %s AND user_id = %s", (event_id, session['user_id']))
+        db.commit()
+        flash('Event removed successfully!')
+    except mysql.connector.Error as err:
+        db.rollback()
+        flash(f'Error removing event: {err}')
+    finally:
+        cursor.close()
+
+    return redirect(url_for('user_dashboard'))
 
 
 

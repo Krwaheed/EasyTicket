@@ -237,3 +237,63 @@ body {
     background-color: #f4f4f4;
     font-size: 0.9em;
 }
+.sort-by-container {
+    display: inline-block;
+    float: right;
+    margin-right: 20px; /* Adjust margin to your liking */
+    margin-bottom: 10px; /* Adds space below */
+}
+
+.sort-by-container label {
+    margin-right: 10px; /* Adds space between label and dropdown */
+}
+
+.events-section h2 {
+    display: inline-block;
+}
+.save-event-btn {
+    background-color: #28a745; /* Background color */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Padding for button size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.save-event-btn:hover {
+    background-color: #28a745; /* Darker color on hover */
+}
+
+.save-event-btn:active {
+    background-color: #28a745; /* Even darker color when clicked */
+}
+
+.save-event-btn:focus {
+    outline: none; /* Remove outline when focused */
+}
+
+
+.delete-event-btn {
+    background-color: #ff6f61; /* Background color */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Padding for button size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.delete-event-btn:hover {
+    background-color: #ff4a3a; /* Darker color on hover */
+}
+
+.delete-event-btn:active {
+    background-color: #ff3a2a; /* Even darker color when clicked */
+}
+
+.delete-event-btn:focus {
+    outline: none; /* Remove outline when focused */
+}
