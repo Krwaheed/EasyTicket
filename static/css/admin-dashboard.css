@@ -133,3 +133,23 @@ footer {
     text-align: center;
     color: white;
 }
+
+.logout-button-container {
+    position: absolute; /* or fixed if you want it to stay fixed while scrolling */
+    top: 20px;
+    right: 20px;
+}
+
+.logout-button {
+    background-color: #070000;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #d9363e;
+}

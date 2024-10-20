@@ -10,17 +10,36 @@ body {
     background-color: #f7f9fc;
     color: #333;
     line-height: 1.6;
+    margin: 0;
 }
 
 /* Header Styling */
 .header {
     background-color: #0044cc;
     color: white;
-    padding: 40px;
-    text-align: left;
+    padding: 20px 40px; /* Padding for header */
     display: flex;
-    justify-content: space-between; /* Space between title and logout button */
+    justify-content: space-between; /* Keeps content aligned with space between */
+    align-items: center; /* Vertically centers the items */
+    width: 100%; /* Full width for the header */
+}
+
+.header-content {
+    flex-grow: 1;
+    text-align: center; /* Centers the dashboard title and welcome text */
+    margin-left: 20px; /* Optional spacing between the logo and content */
+}
+
+
+.header-logo-link {
+    display: flex;
     align-items: center;
+    margin-right: auto; /* Ensures the logo stays on the left */
+}
+
+.header-logo {
+    height: 80px; /* Adjust the size to make it bigger */
+    width: auto; /* Keep the aspect ratio */
 }
 
 .header-content h1 {
@@ -31,9 +50,8 @@ body {
     font-size: 1.2rem;
 }
 
-/* Logout Button Styling */
 .logout-button-container {
-    margin-right: 20px;
+    margin-left: auto; /* Keeps the logout button on the far right */
 }
 
 .logout-button {

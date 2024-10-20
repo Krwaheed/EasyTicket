@@ -134,3 +134,21 @@ footer {
     font-size: 0.85em;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+p a {
+    color: #070000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    margin-top: 20px; /* Add spacing above the link */
+    display: inline-block; /* Ensures margin works properly */
+}
+
+p a:hover {
+    color: white;
+    background-color: #d9363e;
+    padding: 5px;
+    border-radius: 5px;
+    text-decoration: underline;
+}
