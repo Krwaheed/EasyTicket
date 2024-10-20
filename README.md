@@ -10,9 +10,14 @@ API Integration: Fetch real-time event information using an external API.
 Responsive Design: The website is optimized for both desktop and mobile users.
 User Dashboard: Access and manage personalized event recommendations and purchases.
 ## Technologies Used
-Frontend: HTML, CSS, JavaScript
-Backend: Python, Flask (or similar framework)
-Database: MySQL/PostgreSQL (to be determined)
-API: Event-related APIs for fetching event data
-Version Control: Git, GitHub
-Deployment: GitHub Pages (or any preferred hosting service)
+## Frontend:
+HTML, CSS, JavaScript
+## Backend:
+Python, Flask (or similar framework)
+## Database: 
+MySQL
+## API:
+Event-related APIs for fetching event data
+## Version Control:
+Git, GitHub
+
