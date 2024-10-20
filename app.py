@@ -165,6 +165,10 @@ def signup():
             for interest in selected_interests:
                 cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
                                (user_id, interest))
+            selected_subcategories = request.form.getlist('subcategories')
+            for subcategory in selected_subcategories:
+                cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
+                               (user_id, subcategory))
 
             db.commit()  # Commit changes to the database
             return jsonify({'status': 'success', 'redirect_url': url_for('home')})  # JSON response with redirect URL
