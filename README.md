@@ -9,11 +9,11 @@ Search Functionality: Easily search for specific events, dates, or categories.
 API Integration: Fetch real-time event information using an external API.
 Responsive Design: The website is optimized for both desktop and mobile users.
 User Dashboard: Access and manage personalized event recommendations and purchases.
-## Technologies Used
+
 ## Frontend:
 HTML, CSS, JavaScript
 ## Backend:
-Python, Flask (or similar framework)
+Python, Flask 
 ## Database: 
 MySQL
 ## API:
