@@ -12,7 +12,6 @@
         <h1>User Dashboard</h1>
         <p>Welcome, {{ username }}!</p>
     </div>
-    <!-- Logout Button -->
     <div class="logout-button-container">
         <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
     </div>
@@ -28,7 +27,14 @@
         </form>
     </section>
 
-    <section class="recommend-section">
+    <!-- Tabs Section -->
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'recommendations-tab')" id="defaultOpen">Recommendations & Upcoming Events</button>
+        <button class="tablinks" onclick="openTab(event, 'savedEvents-tab')">Saved Events</button>
+    </div>
+
+    <!-- Recommendations & Upcoming Events Tab -->
+    <section id="recommendations-tab" class="tabcontent">
         <h2>Recommended for You</h2>
         <div class="events-grid">
             {% if recommendations %}
@@ -55,83 +61,80 @@
             <p>No recommendations available at the moment.</p>
             {% endif %}
         </div>
+
+        <!-- Sorting Dropdown for Recommendations -->
+        <div class="sort-by-container">
+            <label for="sort_by">Sort by:</label>
+            <select name="sort_by" id="sort_by">
+                <option value="start_time">Start Time</option>
+                <option value="venue">Venue</option>
+                <option value="event_name">Event Name</option>
+            </select>
+        </div>
+
+        <section class="events-section" id="events-section">
+            <h2>Upcoming Events</h2>
+            <div class="events-grid" id="events-grid">
+                {% for event in events %}
+                <div class="event-card" data-start-time="{{ event.start_time }}" data-venue="{{ event.venue.name }}" data-name="{{ event.name }}">
+                    <img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" class="event-thumbnail">
+                    <div class="event-details">
+                        <h3>{{ event.name }}</h3>
+                        <p>{{ event.description }}</p>
+                        <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+                        <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
+                        <p><strong>Tickets:</strong></p>
+                        <ul class="ticket-list">
+                            {% for ticket in event.ticket_links %}
+                            <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        <form action="{{ url_for('save_event') }}" method="post">
+                            <input type="hidden" name="event_id" value="{{ event.event_id }}">
+                            <input type="hidden" name="event_name" value="{{ event.name }}">
+                            <input type="hidden" name="start_time" value="{{ event.start_time }}">
+                            <input type="hidden" name="venue_name" value="{{ event.venue.name }}">
+                            <input type="hidden" name="full_address" value="{{ event.venue.full_address }}">
+                            <button type="submit" class="save-event-btn">Save Event</button>
+                        </form>
+                        <a href="{{ event.link }}" target="_blank" class="view-more">View More</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
     </section>
 
+    <!-- Saved Events Tab -->
+    <section id="savedEvents-tab" class="tabcontent">
+    <h2>Saved Events</h2>
+    <div class="events-grid">
+        {% if saved_events %}
+        {% for event in saved_events %}
+        <div class="event-card" data-event-date="{{ event.event_date }}">
+            <h3>{{ event.event_name }}</h3>
+            <p><strong>Date:</strong> {{ event.event_date }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
 
-    <!-- Saved Events Section -->
-    <section class="saved-events-section">
-        <h2>Saved Events</h2>
-        <div class="events-grid">
-            {% if saved_events %}
-            {% for event in saved_events %}
-            <div class="event-card">
-                <h3>{{ event.event_name }}</h3>
-                <p><strong>Date:</strong> {{ event.event_date }}</p>
-                <p><strong>Location:</strong> {{ event.location }}</p>
-                <!-- Remove Event Form -->
-                <form action="{{ url_for('remove_event') }}" method="post">
-                    <input type="hidden" name="event_id" value="{{ event.event_id }}">
-                    <button type="submit" class="delete-event-btn">Delete Event</button>
-                </form>
+            <!-- Display unavailable message for past events -->
+            <div class="event-unavailable" style="display: none;">
+                <p class="unavailable-text">This event is no longer available.</p>
             </div>
-            {% endfor %}
-            {% else %}
-            <p>You have not saved any events yet.</p>
 
+            <!-- Remove Event Form -->
+            <form action="{{ url_for('remove_event') }}" method="post">
+                <input type="hidden" name="event_id" value="{{ event.event_id }}">
+                <button type="submit" class="delete-event-btn">Delete Event</button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>You have not saved any events yet.</p>
         {% endif %}
     </div>
 </section>
 
-<!-- Sorting Dropdown -->
-<div class="sort-by-container">
-    <label for="sort_by">Sort by:</label>
-    <select name="sort_by" id="sort_by">
-        <option value="start_time">Start Time</option>
-        <option value="venue">Venue</option>
-        <option value="event_name">Event Name</option>
-    </select>
-</div>
-
-<!-- Events Section -->
-<section class="events-section" id="events-section">
-    <h2>Upcoming Events</h2>
-    <div class="events-grid" id="events-grid">
-        {% for event in events %}
-        <div class="event-card" data-start-time="{{ event.start_time }}" data-venue="{{ event.venue.name }}" data-name="{{ event.name }}">
-            <img src="{{ event.thumbnail }}" alt="{{ event.name }} thumbnail" class="event-thumbnail">
-            <div class="event-details">
-                <h3>{{ event.name }}</h3>
-                <p>{{ event.description }}</p>
-                <p><strong>Start Time:</strong> {{ event.start_time }}</p>
-                <p><strong>Venue:</strong> {{ event.venue.name }}, {{ event.venue.full_address }}</p>
-                <p><strong>Tickets:</strong></p>
-                <ul class="ticket-list">
-                    {% for ticket in event.ticket_links %}
-                    <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
-                    {% endfor %}
-                </ul>
-
-
-                <!-- Save Event Form -->
-                <form action="{{ url_for('save_event') }}" method="post">
-    <input type="hidden" name="event_id" value="{{ event.event_id }}">
-    <input type="hidden" name="event_name" value="{{ event.name }}">
-    <input type="hidden" name="start_time" value="{{ event.start_time }}">
-    <input type="hidden" name="venue_name" value="{{ event.venue.name }}">
-    <input type="hidden" name="full_address" value="{{ event.venue.full_address }}">
-    <button type="submit" class="save-event-btn">Save Event</button>
-</form>
-
-
-
-                <a href="{{ event.link }}" target="_blank" class="view-more">View More</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</section>
-    </main>
-
+</main>
 
 <footer class="footer">
     <p>&copy; 2024 EasyTicket. All rights reserved.</p>

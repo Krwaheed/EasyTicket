@@ -19,6 +19,18 @@
     <section class="login-section">
         <div class="login-box">
             <h2>Login</h2>
+
+            <!-- Error Message Display -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="error-message">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+
             <form id="login-form" action="{{ url_for('login') }}" method="POST">
                 <div class="input-box">
                     <input type="text" name="username" required placeholder="Username">

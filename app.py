@@ -7,7 +7,8 @@ from datetime import datetime
 import mysql.connector
 from flask import render_template, Flask, request, session, redirect, url_for, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import check_password_hash
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
@@ -50,15 +51,19 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT user_id, password FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
+
         if user and check_password_hash(user['password'], password):
             session['username'] = username
             session['user_id'] = user['user_id']  # Set user_id in session
             return redirect(url_for('user_dashboard'))
         else:
-            return redirect(url_for('home'))
+            flash('Invalid username or password.', 'error')
+            return redirect(url_for('login'))
+
     return render_template('index.html')
 
 
@@ -78,7 +83,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
 
     headers = {
 
-        "x-rapidapi-key": "302ec63930msh5311bb73e188dc3p112effjsnb788b6f9f595",
+        "x-rapidapi-key": "d726415921msh74685e80187f2f7p1f5b1ajsn413ef1dff56a",
 
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
@@ -161,7 +166,7 @@ def user_dashboard():
     return render_template('user-dashboard.html', username=session['username'], events=events, saved_events=saved_events,recommendations=recommendations, query=query)
 
 
-#************ sing up for user*************
+#************ sign up for user*************
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -212,14 +217,18 @@ def admin_login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM admins WHERE username = %s", (username,))
         admin = cursor.fetchone()
+
         if admin and check_password_hash(admin['password'], password):
             session['admin-username'] = username
             return redirect(url_for('admin_dashboard'))
         else:
-            return redirect(url_for('adminLogin'))
+            flash('Invalid admin username or password.', 'error')  # Flash error message
+            return redirect(url_for('admin_login'))  # Redirect to login page and show the error message
+
     return render_template('adminLogin.html')
 
 @app.route('/admin-dashboard')

@@ -1,4 +1,4 @@
-/* General Styles */
+/* General Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,66 +6,50 @@
 }
 
 body {
-    font-family: 'Helvetica Neue', sans-serif;
-    background-color: #f7f9fc;
-    color: #333;
-    line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f2f5;
+    color: #000000;
     margin: 0;
+    line-height: 1.6;
 }
 
 /* Header Styling */
 .header {
-    background-color: #0044cc;
+    background-color: #00050b;
     color: white;
-    padding: 20px 40px; /* Padding for header */
+    padding: 20px 40px;
     display: flex;
-    justify-content: space-between; /* Keeps content aligned with space between */
-    align-items: center; /* Vertically centers the items */
-    width: 100%; /* Full width for the header */
-}
-
-.header-content {
-    flex-grow: 1;
-    text-align: center; /* Centers the dashboard title and welcome text */
-    margin-left: 20px; /* Optional spacing between the logo and content */
-}
-
-
-.header-logo-link {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-right: auto; /* Ensures the logo stays on the left */
-}
-
-.header-logo {
-    height: 80px; /* Adjust the size to make it bigger */
-    width: auto; /* Keep the aspect ratio */
+    border-bottom: 3px solid #4a6572;
 }
 
 .header-content h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    font-weight: 600;
 }
 
 .header-content p {
     font-size: 1.2rem;
+    opacity: 0.8;
 }
 
 .logout-button-container {
-    margin-left: auto; /* Keeps the logout button on the far right */
+    margin-left: auto;
 }
 
 .logout-button {
-    background-color: #ff4d4f;
+    background-color: #ff5f5f;
     color: white;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 25px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
-    background-color: #d9363e;
+    background-color: #d94444;
 }
 
 /* Centered Search Section */
@@ -73,32 +57,31 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 20vh;
+    margin: 30px 0;
 }
 
 .search-form {
     display: flex;
-    justify-content: center;
     align-items: center;
     background-color: white;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 50px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
 }
 
 .search-input {
     width: 80%;
-    padding: 10px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 50px;
     font-size: 1rem;
+    border-radius: 50px;
     outline: none;
 }
 
 .search-button {
-    padding: 10px 20px;
+    padding: 10px 25px;
     background-color: #28a745;
     color: white;
     border: none;
@@ -106,161 +89,146 @@ body {
     cursor: pointer;
     font-size: 1rem;
     margin-left: 10px;
+    transition: background-color 0.3s ease;
 }
 
 .search-button:hover {
     background-color: #218838;
 }
 
-/* Recommended Section */
-.recommend-section {
-    text-align: center; /* Center align the header text */
-    margin-bottom: 40px; /* Space at the bottom of the section */
-}
-
-.events-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Sets up three columns */
-    gap: 20px; /* Space between each event detail box */
-    padding: 0 20px; /* Padding on the sides of the grid container */
-}
-
-.event-detail {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Tab Section */
+.tab {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%; /* Make all detail cards the same height for uniformity */
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
-.event-detail h3, .event-detail p {
-    margin-bottom: 10px;
+.tab button {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 14px 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 5px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
 }
 
-.ticket-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.ticket-button {
-    background-color: #007bff;
+.tab button.active {
+    background-color: #1e2a38;
     color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
-    margin-right: 5px;
+    border: none;
 }
 
-.ticket-button:hover {
-    background-color: #0056b3;
+.tab button:hover {
+    background-color: #4a6572;
+    color: white;
 }
 
-.view-more {
-    color: #28a745;
-    text-decoration:none;
-    display: inline-block;
-    margin-top: 10px;
+/* Tab Content Section */
+.tabcontent {
+    display: none;
+    padding: 20px;
+    animation: fadeEffect 1s;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.view-more:hover {
-    text-decoration: underline;
+/* Fade-in effect */
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
 }
 
-/* Events Section */
-.events-section {
-    margin-bottom: 40px;
-}
-
+/* Events Grid Styling */
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); /* Adjust for card width */
-    gap: 20px;
-    padding: 0 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 0 40px;
 }
 
-.event-card {
+.event-card, .event-detail {
     background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;  /* Make all cards the same height */
+}
+
+.event-card:hover, .event-detail:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
 .event-card img {
     width: 100%;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
-.event-details {
-    flex-grow: 1;  /* Ensures that event details expand to fill available space */
-}
-
-.event-details h3 {
-    color: #333;
+.event-card h3, .event-detail h3 {
+    font-size: 1.6rem;
     margin-bottom: 10px;
 }
 
-.event-details p {
-    margin-bottom: 10px;
+.event-card p, .event-detail p {
     color: #666;
-}
-
-.ticket-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.ticket-list li {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .ticket-button {
     background-color: #007bff;
     color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    border-radius: 10px;
     text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
     display: inline-block;
-    margin-right: 5px;
 }
 
 .ticket-button:hover {
     background-color: #0056b3;
 }
 
-.view-more {
-    color: #28a745;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
+.save-event-btn, .delete-event-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+    font-weight: 600;
 }
 
-.view-more:hover {
-    text-decoration: underline;
+.delete-event-btn {
+    background-color: #ff6f61;
 }
 
-/* Footer */
-.footer {
-    text-align: center;
-    padding: 20px 0;
-    background-color: #f4f4f4;
-    font-size: 0.9em;
+.save-event-btn:hover, .delete-event-btn:hover {
+    background-color: #218838;
 }
+
+.delete-event-btn:hover {
+    background-color: #ff4a3a;
+}
+
+/* Sorting Dropdown */
 .sort-by-container {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-right: 20px;
-    margin-bottom: 10px;
+    margin-right: 40px;
+    margin-bottom: 20px;
 }
 
 .sort-by-container label {
@@ -271,10 +239,10 @@ body {
 }
 
 .sort-by-container select {
-    padding: 5px 10px;
+    padding: 10px 20px;
     font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: #f9f9f9;
     color: #333;
     transition: border-color 0.3s ease;
@@ -290,53 +258,29 @@ body {
     border-color: #007BFF;
 }
 
-
-.events-section h2 {
-    display: inline-block;
+/* Footer Styling */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #070000;
+    color: #ffffff;
+    font-size: 0.9em;
+    margin-top: 50px;
+    border-top: 3px solid #4a6572;
 }
-.save-event-btn {
-    background-color: #28a745;
+/* Styles for the past event warning */
+.event-unavailable {
+    background-color: rgba(255, 99, 71, 0.9);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
 }
 
-.save-event-btn:hover {
-    background-color: #28a745;
-}
-
-.save-event-btn:active {
-    background-color: #28a745;
-}
-
-.save-event-btn:focus {
-    outline: none;
-}
-
-
-.delete-event-btn {
-    background-color: #ff6f61;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.delete-event-btn:hover {
-    background-color: #ff4a3a;
-}
-
-.delete-event-btn:active {
-    background-color: #ff3a2a;
-}
-
-.delete-event-btn:focus {
-    outline: none;
+.unavailable-text {
+    margin: 0;
+    font-size: 1.1rem;
 }
