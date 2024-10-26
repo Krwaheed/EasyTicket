@@ -83,7 +83,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
 
     headers = {
 
-        "x-rapidapi-key": "d726415921msh74685e80187f2f7p1f5b1ajsn413ef1dff56a",
+        "x-rapidapi-key": "021737c511msh7b470f16a80c422p105a75jsnf5661478b485",
 
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
