@@ -29,7 +29,7 @@ body {
 .admin-button {
     position: absolute;
     top: 15px;
-    left: 15px;
+    right: 15px;
     background-color: #3498db;
     color: white;
     padding: 12px 18px;
@@ -227,4 +227,28 @@ footer {
     font-size: 0.9em;
     letter-spacing: 0.5px;
     box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+.header-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: auto;
+    z-index: 1000;
+}
+/* Error Message Styling */
+.error-message {
+    background-color: #ffdddd;
+    color: #d8000c;
+    border-left: 6px solid #f44336;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.error-message p {
+    margin: 0;
 }
