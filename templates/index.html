@@ -16,33 +16,41 @@
         <p>Your one-stop solution for buying event tickets with ease!</p>
     </header>
 
-    <section class="login-section">
-        <div class="login-box">
-            <h2>Login</h2>
+    <div class="container">
+        <section class="login-section">
+            <div class="login-box">
+                <h2>Login</h2>
+                <!-- Error Message Display -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="error-message">
+                        {% for category, message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% endwith %}
 
-            <!-- Error Message Display -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="error-message">
-                    {% for category, message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% endwith %}
+                <form id="login-form" action="{{ url_for('login') }}" method="POST">
+                    <div class="input-box">
+                        <input type="text" name="username" required placeholder="Username">
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="password" required placeholder="Password">
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+            </div>
+        </section>
 
-            <form id="login-form" action="{{ url_for('login') }}" method="POST">
-                <div class="input-box">
-                    <input type="text" name="username" required placeholder="Username">
-                </div>
-                <div class="input-box">
-                    <input type="password" name="password" required placeholder="Password">
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
-        </div>
-    </section>
+        <section class="description-section">
+            <div class="description-box">
+                <h2>Why EasyTicket?</h2>
+                <p>EasyTicket offers a seamless way to purchase tickets to your favorite events. Whether it's music concerts, sports games, or theater shows, you can find and buy tickets with just a few clicks. Enjoy our personalized recommendations and exclusive deals that make going out easier than ever!</p>
+            </div>
+        </section>
+    </div>
 
     <footer>
         <p>&copy; 2024 EasyTicket. All rights reserved.</p>

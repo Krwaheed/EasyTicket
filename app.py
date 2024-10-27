@@ -109,20 +109,19 @@ def get_user_recommendations(username):
     # List of general categories to exclude
     exclude_categories = ['Movies', 'Theater', 'Music', 'Sports']
 
-    # Filter out general categories
+    # Filter categories
     filtered_interests = [interest for interest in interests if interest['interest_name'] not in exclude_categories]
     print("Filtered interests:", filtered_interests)  # Debugging line
 
-    # Shuffle the list of filtered interests and pick the first three
     random.shuffle(filtered_interests)
     selected_interests = filtered_interests[:3] if len(filtered_interests) > 3 else filtered_interests
 
     recommended_events = []
 
     for interest in selected_interests:
-        print("Fetching events for interest:", interest['interest_name'])  # Debugging line
+        print("Fetching events for interest:", interest['interest_name'])
         events = fetch_real_time_events(interest['interest_name'])
-        print("Events fetched:", events)  # Debugging line
+        print("Events fetched:", events)
         if events and events.get('data'):
             # Choose a random event from those fetched
             random_event = random.choice(events['data'])
@@ -172,17 +171,17 @@ def signup():
         email = request.form['email']
         password = request.form['password']
 
-        # Hash the password before storing it
+        # Hashes the password before storing it
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
 
-        cursor = db.cursor()  # Use the established connection
+        cursor = db.cursor()
         try:
-            # Insert user into the users table
+            # Inserts users into users table
             cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
                            (username, email, hashed_password))
-            user_id = cursor.lastrowid  # Get the ID of the newly created user
+            user_id = cursor.lastrowid
 
-            # Save selected interests
+            # Saves selected interests
             selected_interests = request.form.getlist('interests')
             for interest in selected_interests:
                 cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
@@ -192,13 +191,13 @@ def signup():
                 cursor.execute("INSERT INTO user_interests (user_id, interest_id) VALUES (%s, %s)",
                                (user_id, subcategory))
 
-            db.commit()  # Commit changes to the database
+            db.commit()
             return jsonify({'status': 'success', 'redirect_url': url_for('home')})  # JSON response with redirect URL
         except mysql.connector.Error as err:
-            db.rollback()  # Rollback in case of error
+            db.rollback()
             return jsonify({'status': 'error', 'message': str(err)})
         finally:
-            cursor.close()  # Close the cursor
+            cursor.close()
 
     return render_template('signup.html')
 

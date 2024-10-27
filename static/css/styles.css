@@ -1,7 +1,4 @@
-@keyframes moveBackground {
-    0% { background-position: 0 0; }
-    100% { background-position: -1000px 0; }
-}
+
 
 * {
     margin: 0;
@@ -12,8 +9,6 @@
 
 body {
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,6 +18,13 @@ body {
     background-size: cover;
     background-repeat: repeat-x;
     animation: moveBackground 40s linear infinite;
+}
+
+.container {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    margin-top: 100px; /* Adjusts for the fixed header */
 }
 
 /* Admin Button */
@@ -49,11 +51,11 @@ body {
 
 /* Banner/Header */
 .banner {
-    background-color: #000;
+    background-color: #ffffff;
     width: 100%;
     text-align: center;
     padding: 25px 0;
-    color: #fff;
+    color: #3498db;
     position: fixed;
     top: 0;
     left: 0;
@@ -73,13 +75,9 @@ body {
     opacity: 0.9;
 }
 
-/* Login Form */
-.login-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 150px;
+/* Login Section */
+.login-section {
+    width: 40%; /* Adjusted width for the login section */
 }
 
 .login-box {
@@ -87,7 +85,7 @@ body {
     padding: 50px;
     border-radius: 12px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
-    width: 380px;
+    width: 100%; /* Adjusted to fill the login section */
     transition: box-shadow 0.3s ease;
 }
 
@@ -95,123 +93,43 @@ body {
     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.35);
 }
 
-.login-box h2 {
-    margin-bottom: 25px;
-    font-size: 2.2em;
-    color: #333;
-}
-
-.input-group {
-    margin-bottom: 25px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    font-size: 1em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    transition: border-color 0.3s ease;
-}
-
-.input-group input:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #3498db;
-    color: #fff;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-}
-
-/* Sign Up Form */
-.signup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-}
-
-.signup-box {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    width: 320px;
-    transition: box-shadow 0.3s ease;
-}
-
-.signup-box:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.form-group {
+.input-box {
     margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-button {
+.input-box input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 12px;
-    border: 1px solid #ccc;
+    padding: 12px;
     border-radius: 6px;
+    border: 1px solid #ccc;
 }
 
-button.btn {
+.button {
+    width: 100%;
+    padding: 12px;
     background-color: #3498db;
     color: white;
     border: none;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 1.1em;
-    padding: 12px;
+    font-size: 1.2em;
 }
 
-button.btn:hover {
+.button:hover {
     background-color: #2980b9;
 }
 
-/* Interest Options */
-.interests-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+/* Description Section */
+.description-section {
+    width: 50%; /* Occupies half of the container's width */
 }
 
-.interest-option {
-    background-color: #f0f0f0;
-    border: 2px solid transparent;
-    padding: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.interest-option.selected {
-    background-color: #000;
-    color: #fff;
-    border-color: #3498db;
+.description-box {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    font-size: 1.2em;
 }
 
 /* Footer */
@@ -220,24 +138,15 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
     padding: 15px;
-    color: #fff;
+    color: #3498db;
     font-size: 0.9em;
     letter-spacing: 0.5px;
     box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.3);
 }
 
-
-.header-logo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100px;
-    height: auto;
-    z-index: 1000;
-}
 /* Error Message Styling */
 .error-message {
     background-color: #ffdddd;
