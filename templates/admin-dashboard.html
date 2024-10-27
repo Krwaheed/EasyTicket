@@ -23,7 +23,7 @@
                         <th>Username</th>
                         <th>Email</th>
                         <th>Saved Events</th>
-                        <th>Past Purchases</th>
+                        <th>User Interests</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -55,14 +55,14 @@
         </div>
     </div>
 
-    <!-- Modal for viewing past purchases -->
-    <div id="past-purchases-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="close-past-purchases">&times;</span>
-            <h2>Past Purchases</h2>
-            <ul id="past-purchases-list"></ul>
-        </div>
+<!-- Modal for viewing user interests -->
+<div id="user-interests-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="close-user-interests">&times;</span>
+        <h2>User Interests</h2>
+        <ul id="user-interests-list"></ul>
     </div>
+</div>
 
     <!-- Update script link to use url_for -->
     <script src="{{ url_for('static', filename='js/admin-dashboard.js') }}"></script>
