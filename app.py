@@ -402,23 +402,6 @@ def view_saved_events(user_id):
 
 
 
-@app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
-def view_saved_events(user_id):
-    try:
-        cursor = db.cursor(dictionary=True)
-        query = "SELECT event_name, event_date, location FROM saved_events WHERE user_id = %s"
-        cursor.execute(query, (user_id,))
-        events = cursor.fetchall()
-        return jsonify({'status': 'success', 'events': events})
-    except mysql.connector.Error as err:
-        print(f"Database Error: {err}")
-        return jsonify({'status': 'error', 'message': str(err)})
-    finally:
-        cursor.close()
-
-
-
-
 #*****remove events*******
 @app.route('/remove-event', methods=['POST'])
 def remove_event():
@@ -437,25 +420,6 @@ def remove_event():
         flash(f'Error removing event: {err}')
     finally:
         cursor.close()
-@app.route('/remove-event', methods=['POST'])
-def remove_event():
-    if 'user_id' not in session:
-        flash('Please login to continue.')
-        return redirect(url_for('login'))
-
-    event_id = request.form.get('event_id')
-    try:
-        cursor = db.cursor()
-        cursor.execute("DELETE FROM saved_events WHERE event_id = %s AND user_id = %s", (event_id, session['user_id']))
-        db.commit()
-        flash('Event removed successfully!')
-    except mysql.connector.Error as err:
-        db.rollback()
-        flash(f'Error removing event: {err}')
-    finally:
-        cursor.close()
-
-    return redirect(url_for('user_dashboard'))
 
     return redirect(url_for('user_dashboard'))
 
