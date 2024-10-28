@@ -14,8 +14,7 @@
 
     <div class="admin-login-section">
         <div class="admin-login-box">
-            <h2>Admin Login</h2>
-
+            <h2>Admin</h2>
             <!-- Error Message Display -->
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -36,11 +35,11 @@
                     <label for="admin-password">Password</label>
                     <input type="password" name="password" id="admin-password" required placeholder="Enter password">
                 </div>
-                <button type="submit" class="admin-btn">Login</button>
+                <button type="submit" class="admin-btn">Sign in</button>
             </form>
 
             <!-- Return to User Login Link -->
-            <p class="return-link"><a href="{{ url_for('home') }}">Return to User Login</a></p>
+            <p class="return-link"><a href="{{ url_for('home') }}">Return to User Sign in</a></p>
         </div>
     </div>
 
