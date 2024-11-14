@@ -17,7 +17,7 @@ db = mysql.connector.connect(
     host='localhost',
     user='root',
     password='',
-    database='easyticket'
+    database='easyticket1'
 )
 
 
@@ -81,7 +81,7 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
 
     headers = {
 
-        "x-rapidapi-key": "302ec63930msh5311bb73e188dc3p112effjsnb788b6f9f595",
+        "x-rapidapi-key": "51aca29c10msh4b950d6fce7a324p1a1fd6jsn8b50f91af2ae",
 
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
@@ -319,9 +319,9 @@ def save_event():
 
     # Check if user is logged in
     if 'user_id' not in session:
+        flash('Please login to continue.')
         return redirect(url_for('login'))
 
-    # Extract event details from form data
     event_id = request.form.get('event_id')
     event_name = request.form.get('event_name')
     start_time = request.form.get('start_time')
@@ -329,56 +329,29 @@ def save_event():
     full_address = request.form.get('full_address')
 
     # Check if required fields are provided
-    if not event_id or not event_name or not start_time or not venue_name or not full_address:
-        flash('Missing event data. Please provide all event details.')
-        return redirect(url_for('user_dashboard'))
-    start_time = request.form.get('start_time')
-    venue_name = request.form.get('venue_name')
-    full_address = request.form.get('full_address')
-
-    print("Event Name:", event_name)
-
-
-    try:
-
-        formatted_event_date = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        flash('Invalid event date format.')
-        return redirect(url_for('user_dashboard'))
-    # Check if required fields are provided
-    if not event_id or not event_name or not start_time or not venue_name or not full_address:
+    if not (event_id and event_name and start_time and venue_name and full_address):
         flash('Missing event data. Please provide all event details.')
         return redirect(url_for('user_dashboard'))
 
-    print("Event Name:", event_name)
-
     try:
         formatted_event_date = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        flash('Invalid event date format.')
-        return redirect(url_for('user_dashboard'))
-
-    try:
         cursor = db.cursor()
-
         query = """
             INSERT INTO saved_events (user_id, event_id, event_name, event_date, location) 
             VALUES (%s, %s, %s, %s, %s)
         """
         location = f"{venue_name}, {full_address}"
-
-        cursor.execute(query, (session['user_id'], event_id, event_name, formatted_event_date, location))
-        # Combine venue name and full address for location
-        location = f"{venue_name}, {full_address}"
-
         cursor.execute(query, (session['user_id'], event_id, event_name, formatted_event_date, location))
         db.commit()
         flash('Event saved successfully!')
+        cursor.close()
+        return redirect(url_for('user_dashboard'))  # Redirect to the dashboard with a success message
     except mysql.connector.Error as err:
         print('Database Error:', err)
-        flash('Error saving event. Please try again later.')
-    finally:
+        db.rollback()
         cursor.close()
+        flash('Error saving event. Please try again later.')
+        return redirect(url_for('user_dashboard'))  # Redirect with an error message
 
 
 @app.route('/admin/view-saved-events/<int:user_id>', methods=['GET'])
