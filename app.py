@@ -17,7 +17,7 @@ db = mysql.connector.connect(
     host='localhost',
     user='root',
     password='',
-    database='easyticket1'
+    database='easyticket'
 )
 
 

@@ -47,7 +47,7 @@ header p {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 45%;
+    width: 80%;
     min-width: 300px;
     text-align: center;
 }
@@ -71,11 +71,12 @@ table, th, td {
 th, td {
     padding: 12px;
     text-align: center;
+
 }
 
 button {
     padding: 8px 15px;
-    background-color: #3498db;
+    background-color: #6584c3;
     color: white;
     border: none;
     border-radius: 5px;
@@ -200,7 +201,7 @@ table td:nth-child(1) {
 
 table th:nth-child(2),
 table td:nth-child(2) {
-    width: 30%; /* Email */
+    width: 50%; /* Email */
 }
 
 table th:nth-child(3),
