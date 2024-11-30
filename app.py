@@ -80,19 +80,24 @@ def fetch_real_time_events(query="Concerts in San-Francisco"):
     }
 
     headers = {
-
         "x-rapidapi-key": "51aca29c10msh4b950d6fce7a324p1a1fd6jsn8b50f91af2ae",
-
         "x-rapidapi-host": "real-time-events-search.p.rapidapi.com"
     }
 
-    response = requests.get(url, headers=headers, params=querystring)
+    try:
+        response = requests.get(url, headers=headers, params=querystring)
+        print("Request URL:", response.url)  # Log request URL
+        print("Response Status Code:", response.status_code)  # Log response status code
+        print("Response Text:", response.text)  # Log raw response
 
-    if response.status_code == 200:
-        return response.json()
-    else:
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"API Error: {response.status_code} - {response.text}")
+            return None
+    except requests.RequestException as e:
+        print(f"Request Exception: {e}")
         return None
-
 
 def get_user_recommendations(username):
     """Fetch recommended events based on user interests, excluding general categories."""

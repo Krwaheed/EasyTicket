@@ -35,32 +35,43 @@
 
     <!-- Recommendations & Upcoming Events Tab -->
     <section id="recommendations-tab" class="tabcontent">
-        <h2>Recommended for You</h2>
-        <div class="events-grid">
-            {% if recommendations %}
-            {% for event in recommendations %}
-            <div class="event-detail">
-                <h3>{{ event.name }}</h3>
-                <p>{{ event.description }}</p>
-                <p><strong>Start Time:</strong> {{ event.start_time }}</p>
-                <p><strong>Venue:</strong>
-                    {% if event.venue and event.venue.name and event.venue.full_address %}
-                    {{ event.venue.name }}, {{ event.venue.full_address }}
-                    {% else %}
-                    No venue information available
-                    {% endif %}
-                </p>
-                <ul class="ticket-list">
-                    {% for ticket in event.ticket_links %}
-                    <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endfor %}
-            {% else %}
-            <p>No recommendations available at the moment.</p>
-            {% endif %}
+    <h2>Recommended for You</h2>
+    <div class="events-grid">
+        {% if recommendations %}
+        {% for event in recommendations %}
+        <div class="event-detail">
+            <h3>{{ event.name }}</h3>
+            <p>{{ event.description }}</p>
+            <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+            <p><strong>Venue:</strong>
+                {% if event.venue and event.venue.name and event.venue.full_address %}
+                {{ event.venue.name }}, {{ event.venue.full_address }}
+                {% else %}
+                No venue information available
+                {% endif %}
+            </p>
+            <ul class="ticket-list">
+                {% for ticket in event.ticket_links %}
+                <li><a href="{{ ticket.link }}" target="_blank" class="ticket-button">{{ ticket.source }}</a></li>
+                {% endfor %}
+            </ul>
+            <!-- Save Event Form -->
+            <form action="{{ url_for('save_event') }}" method="post">
+                <input type="hidden" name="event_id" value="{{ event.event_id }}">
+                <input type="hidden" name="event_name" value="{{ event.name }}">
+                <input type="hidden" name="start_time" value="{{ event.start_time }}">
+                <input type="hidden" name="venue_name" value="{{ event.venue.name }}">
+                <input type="hidden" name="full_address" value="{{ event.venue.full_address }}">
+                <button type="submit" class="save-event-btn">Save Event</button>
+            </form>
+            <a href="{{ event.link }}" target="_blank" class="view-more">View More</a>
         </div>
+        {% endfor %}
+        {% else %}
+        <p>No recommendations available at the moment.</p>
+        {% endif %}
+    </div>
+
 
         <!-- Sorting Dropdown for Recommendations -->
         <div class="sort-by-container">
